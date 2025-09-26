@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PochtaX — O'zbekiston ↔ Yaponiya</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style>
+    :root{
+      --bg:#ffffff;
+      --dark:#2f3640;
+      --primary:#ff4757;
+      --accent:#1e90ff;
+      --muted:#888;
+      --card:#f5f6fa;
+      --radius:12px;
+      --glass: rgba(255,255,255,0.6);
+      font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--dark);line-height:1.5}
+    .container{max-width:1100px;margin:0 auto;padding:0 1.25rem}
+
+    /* Header */
+    header{background:linear-gradient(90deg,#141a22 0%, #27303b 100%);position:sticky;top:0;z-index:90}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:.9rem 0}
+    .logo{color:var(--accent);font-weight:700;font-size:1.6rem;letter-spacing:1px}
+    nav ul{list-style:none;margin:0;padding:0;display:flex;gap:.25rem}
+    nav a{display:block;padding:.6rem .9rem;color:#fff;text-decoration:none;border-radius:8px;font-weight:600}
+    nav a:hover{background:rgba(255,255,255,0.04);color:var(--primary)}
+
+    /* Language switcher (fixed) */
+    .language-switcher{position:fixed;right:20px;top:20px;z-index:120}
+    .lang-btn{display:flex;align-items:center;gap:.5rem;background:linear-gradient(180deg,var(--dark),#1f2a33);color:#fff;border:none;padding:.45rem .65rem;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.25);cursor:pointer}
+    .lang-btn img{width:18px;height:14px;object-fit:cover;border-radius:2px}
+    .lang-code{font-weight:700}
+
+    .dropdown{position:relative}
+    .dropdown-panel{position:absolute;right:0;top:calc(100% + 8px);background:linear-gradient(180deg,#0f1720,#12171c);border-radius:10px;padding:.4rem;min-width:170px;box-shadow:0 10px 40px rgba(2,6,23,0.6);display:none}
+    .dropdown-panel.show{display:block;animation:pop .18s ease-out}
+    @keyframes pop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+
+    .lang-option{display:flex;align-items:center;gap:.6rem;padding:.6rem;border-radius:8px;color:#e7eef8;text-decoration:none;cursor:pointer}
+    .lang-option:hover{background:rgba(255,255,255,0.03)}
+    .lang-option img{width:22px;height:16px;border-radius:3px}
+
+    /* Hero */
+    .hero{padding:6.5rem 0;background:linear-gradient(135deg,var(--accent),#8e44ad);color:#fff;text-align:center}
+    .hero h1{font-size:2.4rem;margin:0 0 .6rem}
+    .hero p{max-width:740px;margin:0 auto 1.25rem;font-size:1.05rem;opacity:.95}
+    .contact-brief{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
+    .contact-brief a{color:#fff;text-decoration:none;font-weight:600}
+
+    /* Sections */
+    .section{padding:4.5rem 0;text-align:center}
+    .section h2{font-size:2rem;margin-bottom:1.25rem}
+
+    /* Cards */
+    .grid{display:flex;gap:1.25rem;justify-content:center;flex-wrap:wrap}
+    .card{background:var(--card);padding:1.6rem;border-radius:12px;min-width:260px;box-shadow:0 8px 30px rgba(15,18,20,0.06)}
+
+    /* Price promo */
+    .price-promo{background:linear-gradient(90deg,#ffd166,#f29f05);padding:2rem;border-radius:14px;color:var(--dark);display:flex;justify-content:center}
+    .price-box{background:#fff;padding:1.25rem;border-radius:10px;min-width:280px}
+    .price-current{font-size:2.4rem;color:var(--primary);font-weight:800}
+
+    /* Contact form */
+    .contact-form{max-width:640px;margin:0 auto;background:linear-gradient(180deg,rgba(255,255,255,0.9),#fff);padding:1.25rem;border-radius:12px;box-shadow:0 12px 40px rgba(10,10,12,0.06)}
+    .contact-form input,.contact-form textarea{width:100%;padding:.85rem;border-radius:8px;border:1px solid #e6eaf0;margin-bottom:.9rem}
+    .contact-form button{background:var(--primary);color:#fff;padding:.85rem 1.1rem;border:none;border-radius:8px;font-weight:700}
+
+    footer{padding:2rem 0;background:var(--dark);color:#fff;text-align:center}
+
+    /* Responsive */
+    @media (max-width:760px){
+      .topbar{flex-direction:column;gap:.6rem;padding:.8rem}
+      nav ul{flex-wrap:wrap;justify-content:center}
+      .hero{padding:4.5rem 1rem}
+      .hero h1{font-size:1.6rem}
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Language switcher fixed -->
+  <div class="language-switcher" aria-hidden="false">
+    <div class="dropdown">
+      <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false">
+        <img id="currentFlag" src="https://flagcdn.com/16x12/uz.png" alt="flag">
+        <span class="lang-code" id="currentLang">UZ</span>
+        <i class="fas fa-chevron-down" style="opacity:.9;margin-left:.3rem;font-size:.9rem"></i>
+      </button>
+
+      <div class="dropdown-panel" id="langPanel" role="menu" aria-label="Til tanlash">
+        <div class="lang-option" data-lang="uz" role="menuitem" tabindex="0">
+          <img src="https://flagcdn.com/24x18/uz.png" alt="uz">
+          <div>
+            <div style="font-weight:700">O'zbekcha</div>
+            <div style="font-size:.8rem;color:var(--muted)">UZ</div>
+          </div>
+        </div>
+        <div class="lang-option" data-lang="ru" role="menuitem" tabindex="0">
+          <img src="https://flagcdn.com/24x18/ru.png" alt="ru">
+          <div>
+            <div style="font-weight:700">Русский</div>
+            <div style="font-size:.8rem;color:var(--muted)">RU</div>
+          </div>
+        </div>
+        <div class="lang-option" data-lang="en" role="menuitem" tabindex="0">
+          <img src="https://flagcdn.com/24x18/gb.png" alt="en">
+          <div>
+            <div style="font-weight:700">English</div>
+            <div style="font-size:.8rem;color:var(--muted)">EN</div>
+          </div>
+        </div>
+        <div class="lang-option" data-lang="jp" role="menuitem" tabindex="0">
+          <img src="https://flagcdn.com/24x18/jp.png" alt="jp">
+          <div>
+            <div style="font-weight:700">日本語</div>
+            <div style="font-size:.8rem;color:var(--muted)">JP</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="container topbar">
+      <div class="logo">PochtaX</div>
+      <nav>
+        <ul>
+          <li><a href="#bosh-sahifa">Bosh sahifa</a></li>
+          <li><a href="#xizmatlar">Xizmatlar</a></li>
+          <li><a href="#reyslar">Reyslar</a></li>
+          <li><a href="#narxlar">Narxlar</a></li>
+          <li><a href="#aloqa">Aloqa</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO uchun -->
+  <title>PochtaX - O'zbekiston-Yaponiya Pochta Xizmati</title>
+  <meta name="description" content="PochtaX - O'zbekiston va Yaponiya o'rtasida tezkor va ishonchli pochta xizmati. Hujjatlar va posilkalarni xavfsiz yetkazib beramiz.">
+  <meta name="keywords" content="PochtaX, pochta, posilka, Uzbekistan, Yaponiya, express yetkazish, bagaj yuborish">
+  <meta name="author" content="PochtaX">
+
+  <!-- Social media uchun -->
+  <meta property="og:title" content="PochtaX - O'zbekiston-Yaponiya Pochta Xizmati">
+  <meta property="og:description" content="Tez, xavfsiz va ishonchli pochta xizmati.">
+  <meta property="og:image" content="https://yourdomain.com/preview.jpg">
+  <meta property="og:url" content="https://yourdomain.com">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+
+
+  <main>
+    <section id="bosh-sahifa" class="hero">
+      <div class="container">
+        <h1 data-lang-key="hero-title">O'zbekiston va Yaponiya o'rtasida ishonchli pochta xizmati</h1>
+        <p data-lang-key="hero-subtitle">Hujjatlaringiz va posilkalaringizni tez, xavfsiz va ishonchli yetkazib beramiz.</p>
+        <div class="contact-brief">
+          <div style="background:rgba(255,255,255,0.08);padding:.6rem 1rem;border-radius:8px;display:flex;gap:.6rem;align-items:center">
+            <i class="fas fa-phone" style="color:var(--primary)"></i>
+            <div><strong data-lang-key="contact-phone">Telefon:</strong> <span class="phone-number">+998957777139</span></div>
+          </div>
+          <div style="background:rgba(255,255,255,0.08);padding:.6rem 1rem;border-radius:8px;display:flex;gap:.6rem;align-items:center">
+            <i class="fab fa-telegram-plane" style="color:var(--accent)"></i>
+            <div><a href="https://t.me/JPN_UZB_pochta" target="_blank" rel="noopener" data-lang-key="contact-telegram" style="color:#fff;text-decoration:none">@JPN_UZB_pochta</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="xizmatlar" class="section">
+      <div class="container">
+        <h2 data-lang-key="services-title">Xizmatlarimiz</h2>
+        <div class="grid">
+          <div class="card">
+            <i class="fas fa-paper-plane" style="font-size:1.6rem;color:var(--accent)"></i>
+            <h3 data-lang-key="service1-title">Tezkor yetkazish</h3>
+            <p data-lang-key="service1-desc">Shoshilinch hujjatlar va posilkalar uchun express yetkazib berish.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reyslar" class="section bg">
+      <div class="container">
+        <h2 data-lang-key="flights-title">Bagajlar jo'natilishi</h2>
+        <div class="grid">
+          <div class="card">
+            <i class="fas fa-calendar-alt" style="font-size:1.4rem;color:var(--primary)"></i>
+            <h4 data-lang-key="flight-date-title">Jo'natilish sanasi</h4>
+            <p id="flight-date">—</p>
+          </div>
+          <div class="card">
+            <i class="fas fa-info-circle" style="font-size:1.4rem;color:var(--muted)"></i>
+            <h4 data-lang-key="flight-info-title">Ma'lumot</h4>
+            <p data-lang-key="flight-info-desc">Keyingi reys Yaponiya-O'zbekiston yo'nalishida.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="narxlar" class="section">
+      <div class="container">
+        <h2 data-lang-key="pricing-title">Narxlar va Tariflar</h2>
+        <div class="price-promo">
+          <div class="price-box">
+            <h4 data-lang-key="price-title">Bir kg uchun narx</h4>
+            <div style="display:flex;align-items:end;gap:1rem;justify-content:center">
+              <div style="text-decoration:line-through;color:#9aa0a6"> <span data-lang-key="price-old">2000 ¥</span></div>
+              <div class="price-current"><span data-lang-key="price-new">1500 ¥</span></div>
+            </div>
+            <p data-lang-key="pricing-note">Chegirma tugashiga oz qoldi! Tezroq foydalanib qoling.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="aloqa" class="section">
+      <div class="container">
+        <h2 data-lang-key="contact-title">Biz bilan bog'laning</h2>
+        <p data-lang-key="contact-subtitle">Savollaringiz bormi? Bizga murojaat qiling.</p>
+        <form class="contact-form" id="contactForm">
+          <input type="text" id="name" placeholder="Ismingiz" data-lang-key="form-name-ph" required>
+          <input type="text" id="telegram" placeholder="Telegram raqamingiz" data-lang-key="form-telegram-ph" required>
+          <textarea id="message" rows="5" placeholder="Xabaringiz" data-lang-key="form-message-ph" required></textarea>
+          <div style="text-align:center"><button type="submit" data-lang-key="form-send-btn">Yuborish</button></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p data-lang-key="footer-text">&copy; 2025 PochtaX. Barcha huquqlar himoyalangan.</p>
+    </div>
+  </footer>
+
+  <script>
+    // --- TRANSLATIONS ---
+    const translations = {
+      'uz': { 'logo':'PochtaX','hero-title':'O\'zbekiston va Yaponiya o\'rtasida ishonchli pochta xizmati','hero-subtitle':'Hujjatlaringiz va posilkalaringizni tez, xavfsiz va ishonchli yetkazib beramiz.','contact-phone':'Telefon:','contact-telegram':'Telegram:','services-title':'Xizmatlarimiz','service1-title':'Tezkor yetkazish','service1-desc':'Shoshilinch hujjatlar va posilkalar uchun express yetkazib berish.','flights-title':'Bagajlar jo\'natilishi','flight-date-title':'Jo\'natilish sanasi','flight-info-title':'Ma\'lumot','flight-info-desc':'Keyingi reys Yaponiya-O\'zbekiston yo\'nalishida.','pricing-title':'Narxlar va Tariflar','price-title':'Bir kg uchun narx','price-old':'2000 ¥','price-new':'1500 ¥','pricing-note':'Chegirma tugashiga oz qoldi! Tezroq foydalanib qoling.','contact-title':'Biz bilan bog\'laning','contact-subtitle':'Savollaringiz bormi? Bizga murojaat qiling.','form-name-ph':'Ismingiz','form-telegram-ph':'Telegram raqamingiz','form-message-ph':'Xabaringiz','form-send-btn':'Yuborish','footer-text':'© 2025 PochtaX. Barcha huquqlar himoyalangan.'},
+      'ru': { 'logo':'PochtaX','hero-title':'Надежная почтовая служба между Узбекистаном и Японией','hero-subtitle':'Быстрая, безопасная и надежная доставка ваших документов и посылок.','contact-phone':'Телефон:','contact-telegram':'Телеграм:','services-title':'Наши услуги','service1-title':'Срочная доставка','service1-desc':'Экспресс-доставка для срочных документов и посылок.','flights-title':'Расписание рейсов','flight-date-title':'Дата отправления','flight-info-title':'Информация','flight-info-desc':'Следующий рейс по маршруту Япония-Узбекистан.','pricing-title':'Цены и тарифы','price-title':'Цена за 1 кг','price-old':'2000 ¥','price-new':'1500 ¥','pricing-note':'Скидка скоро закончится! Успейте воспользоваться.','contact-title':'Свяжитесь с нами','contact-subtitle':'Есть вопросы? Свяжитесь с нами.','form-name-ph':'Ваше имя','form-telegram-ph':'Номер Телеграм','form-message-ph':'Ваше сообщение','form-send-btn':'Отправить','footer-text':'© 2025 PochtaX. Все права защищены.'},
+      'en': { 'logo':'PochtaX','hero-title':'Reliable Postal Service Between Uzbekistan and Japan','hero-subtitle':'Fast, secure, and reliable delivery of your documents and parcels.','contact-phone':'Phone:','contact-telegram':'Telegram:','services-title':'Our Services','service1-title':'Express Delivery','service1-desc':'Express delivery for urgent documents and parcels.','flights-title':'Flight Schedule','flight-date-title':'Departure Date','flight-info-title':'Information','flight-info-desc':'Next flight on the Japan-Uzbekistan route.','pricing-title':'Pricing and Tariffs','price-title':'Price per 1 kg','price-old':'2000 ¥','price-new':'1500 ¥','pricing-note':'The discount is about to expire! Take advantage now.','contact-title':'Contact Us','contact-subtitle':'Have questions? Contact us.','form-name-ph':'Your Name','form-telegram-ph':'Your Telegram Number','form-message-ph':'Your message','form-send-btn':'Send','footer-text':'© 2025 PochtaX. All rights reserved.'},
+      'jp': { 'logo':'ポチタエックス','hero-title':'ウズベキスタンと日本の信頼できる郵便サービス','hero-subtitle':'文書や荷物を迅速、安全、確実に配達します。','contact-phone':'電話:','contact-telegram':'テレグラム:','services-title':'当社のサービス','service1-title':'エクスプレス配送','service1-desc':'お急ぎの書類や荷物のための速達便。','flights-title':'フライトスケジュール','flight-date-title':'出発日','flight-info-title':'情報','flight-info-desc':'次のフライトは日本-ウズベキスタン路線です。','pricing-title':'料金と関税','price-title':'1kgあたりの価格','price-old':'2000 ¥','price-new':'1500 ¥','pricing-note':'割引期間がまもなく終了します！今すぐご利用ください。','contact-title':'お問い合わせ','contact-subtitle':'ご質問がありますか？お問い合わせください。','form-name-ph':'お名前','form-telegram-ph':'テレグラム番号','form-message-ph':'メッセージ','form-send-btn':'送信','footer-text':'© 2025 ポチタエックス. 全著作権所有。'}
+    };
+
+    // Elements
+    const elementsToTranslate = document.querySelectorAll('[data-lang-key]');
+    const langBtn = document.getElementById('langBtn');
+    const langPanel = document.getElementById('langPanel');
+    const langOptions = document.querySelectorAll('.lang-option');
+    const currentFlag = document.getElementById('currentFlag');
+    const currentLang = document.getElementById('currentLang');
+    const flightDateEl = document.getElementById('flight-date');
+
+    // Flight date: 14 days from today
+    const today = new Date();
+    const future = new Date(); future.setDate(today.getDate()+14);
+    const opts = { year:'numeric', month:'long', day:'numeric' };
+    flightDateEl.textContent = future.toLocaleDateString('uz-UZ', opts);
+
+    // Set language function
+    function setLanguage(lang){
+      elementsToTranslate.forEach(el => {
+        const key = el.getAttribute('data-lang-key');
+        if(!key) return;
+        const text = translations[lang] && translations[lang][key] ? translations[lang][key] : '';
+        if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA'){
+          el.placeholder = text;
+        } else if(el.tagName === 'A' && el.getAttribute('href') && el.getAttribute('href').includes('t.me')){
+          // keep link but update text
+          el.textContent = translations[lang]['contact-telegram'] || el.textContent;
+        } else {
+          el.textContent = text;
+        }
+      });
+
+      // update label
+      const opt = document.querySelector(`.lang-option[data-lang="${lang}"]`);
+      if(opt){
+        const img = opt.querySelector('img');
+        if(img) currentFlag.src = img.src;
+        const code = opt.textContent.trim().split('\n')[0];
+        // get short code (last 2-3 chars)
+        const short = opt.getAttribute('data-lang').toUpperCase();
+        currentLang.textContent = short;
+      }
+
+      localStorage.setItem('pochta_lang', lang);
+    }
+
+    // Toggle panel
+    langBtn.addEventListener('click', (e)=>{
+      const showing = langPanel.classList.toggle('show');
+      langBtn.setAttribute('aria-expanded', showing ? 'true' : 'false');
+    });
+
+    // Choose language
+    langOptions.forEach(opt => {
+      opt.addEventListener('click', (e)=>{
+        const lang = opt.getAttribute('data-lang');
+        setLanguage(lang);
+        langPanel.classList.remove('show');
+        langBtn.setAttribute('aria-expanded','false');
+      });
+      // keyboard support
+      opt.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); opt.click(); }
+      });
+    });
+
+    // close when clicking outside
+    document.addEventListener('click', (e)=>{
+      const path = e.composedPath ? e.composedPath() : (e.path || []);
+      if(!path.includes(langPanel) && !path.includes(langBtn)){
+        langPanel.classList.remove('show');
+        langBtn.setAttribute('aria-expanded','false');
+      }
+    });
+
+    // Restore saved lang
+    const saved = localStorage.getItem('pochta_lang') || 'uz';
+    setLanguage(saved);
+
+    // Simple contact form handler (demo only)
+    const form = document.getElementById('contactForm');
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const telegram = document.getElementById('telegram').value.trim();
+      const message = document.getElementById('message').value.trim();
+      if(!name || !telegram || !message){ alert('Iltimos barcha maydonlarni to\'ldiring.'); return; }
+      // For demo we just show success and clear form
+      alert('Xabaringiz qabul qilindi. Rahmat!');
+      form.reset();
+    });
+
+    // Accessibility: close panel with Escape
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape'){
+        langPanel.classList.remove('show');
+        langBtn.setAttribute('aria-expanded','false');
+      }
+    });
+  </script>
+</body>
+</html>
